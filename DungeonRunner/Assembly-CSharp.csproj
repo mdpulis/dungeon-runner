@@ -46,10 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\CameraRunnerScript.cs" />
-     <Compile Include="Assets\Scripts\DestroyerScript.cs" />
-     <Compile Include="Assets\Scripts\Scoring.cs" />
-     <Compile Include="Assets\Scripts\SpawnScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\CameraRunnerScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\DestroyerScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\Scoring.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\SpawnScript.cs" />
+     <Compile Include="Assets\Scripts\Town\TownAreaLoader.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
