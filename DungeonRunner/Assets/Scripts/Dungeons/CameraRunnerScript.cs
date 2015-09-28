@@ -10,6 +10,6 @@ public class CameraRunnerScript : MonoBehaviour {
 	public int alterByY;
 
 	void Update () {
-		transform.position = new Vector3 (player.position.x + alterByX, alterByY, -10);
+		transform.position = new Vector3 (player.position.x + alterByX + DataContainer.alterCameraXPos, alterByY, -10);
 	}
 }

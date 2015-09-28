@@ -1,8 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Town\TownAreaLoader.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dungeons\HealthManagement.cs">
     <Files>
-      <File FileName="Assets\Scripts\Town\TownAreaLoader.cs" Line="16" Column="34" />
+      <File FileName="Assets\Scripts\Dungeons\PlayerParameters.cs" Line="35" Column="36" />
+      <File FileName="Assets\Scripts\Dungeons\SpawnScript.cs" Line="28" Column="24" />
+      <File FileName="Assets\Scripts\Dungeons\DamagePlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\DestroyerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\General\DataContainer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\Timing.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\HealthManagement.cs" Line="19" Column="29" />
+      <File FileName="Assets\Scripts\Dungeons\DisplayFrameRate.cs" Line="20" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

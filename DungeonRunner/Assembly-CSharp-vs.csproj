@@ -47,9 +47,21 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Dungeons\CameraRunnerScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\DamagePlayer.cs" />
      <Compile Include="Assets\Scripts\Dungeons\DestroyerScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\DisplayFrameRate.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\HealthManagement.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\PlayerParameters.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\RandomSpawnGround.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Scoring.cs" />
      <Compile Include="Assets\Scripts\Dungeons\SpawnScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\Timing.cs" />
+     <Compile Include="Assets\Scripts\FirstPersonController.cs" />
+     <Compile Include="Assets\Scripts\General\DataContainer.cs" />
+     <Compile Include="Assets\Scripts\Namespaces\ColorControls.cs" />
+     <Compile Include="Assets\Scripts\Namespaces\TimeSpanUtil.cs" />
+     <Compile Include="Assets\Scripts\Platformer2DUserControl.cs" />
+     <Compile Include="Assets\Scripts\PlatformerCharacter2D.cs" />
      <Compile Include="Assets\Scripts\Town\TownAreaLoader.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
