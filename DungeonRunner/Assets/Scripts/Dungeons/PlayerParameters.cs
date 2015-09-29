@@ -4,7 +4,7 @@ using System.Diagnostics; //Conflicts with Debug.Log, so we need to use UnityEng
 
 public class PlayerParameters : MonoBehaviour{
 
-	public const int KNOCKBACK = 3;
+	public const int KNOCKBACK = 8;
 
 	private HealthManagement healthManagement;
 

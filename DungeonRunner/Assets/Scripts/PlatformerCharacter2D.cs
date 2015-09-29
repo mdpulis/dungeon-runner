@@ -10,7 +10,15 @@ namespace UnityStandardAssets._2D
         [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;  // Amount of maxSpeed applied to crouching movement. 1 = 100%
         [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
-
+		
+		
+		public bool alowMove = true;			// alows X movment when True
+		private bool hasDoubleJumped = false;	//tracks double jumping
+		public float doubleJumpAscent  = 0.75f;	//multiplyer of force for asending double jumps
+		public float doubleJumpApex = 1f;		//multiplyer of force for cresting double jumps
+		public float doubleJumpDescent = 1.5f; 	//multiplyer of force for descending double jumps
+		
+		
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool m_Grounded;            // Whether or not the player is grounded.
@@ -73,9 +81,12 @@ namespace UnityStandardAssets._2D
                 // The Speed animator parameter is set to the absolute value of the horizontal input.
                 m_Anim.SetFloat("Speed", Mathf.Abs(move));
 
-                // Move the character
-                m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
-				//m_Rigidbody2D.velocity = new Vector2(m_MaxSpeed, 0);
+                // Move the character if permitted to move
+				if (alowMove){
+					//Debug.Log("true");
+					m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
+					//m_Rigidbody2D.velocity = new Vector2(m_MaxSpeed, 0);
+				}
 
                 // If the input is moving the player right and the player is facing left...
                 if (move > 0 && !m_FacingRight)
@@ -90,16 +101,37 @@ namespace UnityStandardAssets._2D
                     Flip();
                 }
             }
+			if (m_Grounded) {
+				//clears the doublejump limiter ONLY when grounded
+				hasDoubleJumped = false;
+			}
             // If the player should jump...
             if (m_Grounded && jump && m_Anim.GetBool("Ground"))
             {
                 // Add a vertical force to the player.
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
+				
 				//This next line makes the y value 0 so that the screen does not move vertically when jumping
 				//m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
-                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-            }
+                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce), ForceMode2D.Impulse);
+				//handels double jumping
+				//this should probibly be converted to a case statment for performance and sanity reasons...
+				//on the up
+			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y > 3) {
+				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpAscent)), ForceMode2D.Impulse);
+				hasDoubleJumped = true;
+				//at the crest
+			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y >= -3 && m_Rigidbody2D.velocity.y <= 4) {
+				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpApex)), ForceMode2D.Impulse);
+				hasDoubleJumped = true;
+				//on descent
+			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y < -4) {
+				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpDescent)), ForceMode2D.Impulse);
+				hasDoubleJumped = true;
+			} else if (!m_Grounded && jump && !hasDoubleJumped){
+				Debug.Log("y force" + m_Rigidbody2D.velocity.y);	//just here for logging things that shouldnt be happening...
+			}
         }
 
 
