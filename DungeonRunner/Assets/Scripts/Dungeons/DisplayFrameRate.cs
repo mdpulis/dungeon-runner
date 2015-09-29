@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class DisplayFrameRate : MonoBehaviour {
 
@@ -30,7 +31,7 @@ public class DisplayFrameRate : MonoBehaviour {
 			m_frameCounter = 0;
 			m_timeCounter = 0.0f;
 		}
-		fpsText.text = "FPS: " + m_lastFramerate;
+		fpsText.text = "FPS: " + Math.Round(m_lastFramerate, 2);
 	}
 
 }
