@@ -14,9 +14,9 @@ namespace UnityStandardAssets._2D
 		
 		public bool alowMove = true;			// alows X movment when True
 		private bool hasDoubleJumped = false;	//tracks double jumping
-		public float doubleJumpAscent  = 0.75f;	//multiplyer of force for asending double jumps
-		public float doubleJumpApex = 1f;		//multiplyer of force for cresting double jumps
-		public float doubleJumpDescent = 1.5f; 	//multiplyer of force for descending double jumps
+		public float doubleJumpAscent  = 0.75f;	//multiplier of force for asending double jumps
+		public float doubleJumpApex = 1f;		//multiplier of force for cresting double jumps
+		public float doubleJumpDescent = 1.5f; 	//multiplier of force for descending double jumps
 		
 		
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.

@@ -1,16 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dungeons\Scoring.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlatformerCharacter2D.cs">
     <Files>
-      <File FileName="Assets\Scripts\Dungeons\Scoring.cs" Line="21" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\DamagePlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\HealthManagement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\Scoring.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\PlayerParameters.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\SpawnScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Dungeons\DamagePlayer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\DestroyerScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\General\DataContainer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\Timing.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Dungeons\HealthManagement.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\DisplayFrameRate.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\TimeScaleSpeed.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlatformerCharacter2D.cs" Line="142" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

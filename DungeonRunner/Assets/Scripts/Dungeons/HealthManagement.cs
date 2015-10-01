@@ -5,6 +5,7 @@ using System.Collections;
 public class HealthManagement : MonoBehaviour {
 
 	public Text hpText;
+	public Image hpBar;
 	private GameObject player;
 	
 	void Start () {
@@ -14,10 +15,13 @@ public class HealthManagement : MonoBehaviour {
 
 	public void UpdateHealthVisible(){
 		hpText.text = "HP: " + player.GetComponent<PlayerParameters> ().playerHealth;
+		hpBar.fillAmount = (float)player.GetComponent<PlayerParameters> ().playerHealth / DataContainer.maxPlayerHealth;
 	}
 
 	public void DisplayDeath(){
 		hpText.text = "<b>YOU DIED</b>";
 	}
+
+
 
 }

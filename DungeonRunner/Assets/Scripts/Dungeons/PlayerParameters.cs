@@ -20,7 +20,7 @@ public class PlayerParameters : MonoBehaviour{
 	void Start () {
 		healthManagement = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<HealthManagement> ();
 		invincibilityStopwatch = new Stopwatch ();
-		playerHealth = DataContainer.playerHealth;
+		playerHealth = DataContainer.maxPlayerHealth;
 		invincibilityTime = 1 + DataContainer.additionalInvincibilityTime;
 	}
 
