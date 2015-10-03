@@ -11,7 +11,8 @@ public class PlayerParameters : MonoBehaviour{
 	public double invincibilityTime;
 	public Stopwatch invincibilityStopwatch;
 	public bool invincible = false;
-	
+
+	public int maxPlayerHealth;
 	public int playerHealth;
 	
 	private static bool currentlyInvisible = false;
@@ -20,6 +21,7 @@ public class PlayerParameters : MonoBehaviour{
 	void Start () {
 		healthManagement = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<HealthManagement> ();
 		invincibilityStopwatch = new Stopwatch ();
+		maxPlayerHealth = DataContainer.maxPlayerHealth;
 		playerHealth = DataContainer.maxPlayerHealth;
 		invincibilityTime = 1 + DataContainer.additionalInvincibilityTime;
 	}
@@ -34,6 +36,11 @@ public class PlayerParameters : MonoBehaviour{
 			UnityEngine.Debug.Log("Player Health reached 0. Now ending game.");
 			healthManagement.DisplayDeath();
 			Time.timeScale = 0;
+		}
+
+		if (playerHealth > maxPlayerHealth) {
+			UnityEngine.Debug.Log ("Player Health exceeded max health.");
+			playerHealth = maxPlayerHealth;
 		}
 
 		//Start our invincibility timer by resetting it to 0 and getting back into it

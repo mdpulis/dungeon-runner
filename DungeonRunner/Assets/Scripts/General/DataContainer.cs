@@ -8,6 +8,7 @@ public static class DataContainer{
 	public static float increaseJump = 0.0f;
 	public static float timeScaleMod = 0.0f;
 	public static float additionalInvincibilityTime = 0.0f;
+	public static bool doubleJumpEnabled = false;
 
 	//Player Parameters
 	public static string playerName = "";
