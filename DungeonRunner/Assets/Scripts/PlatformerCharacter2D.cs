@@ -114,20 +114,24 @@ namespace UnityStandardAssets._2D
 				
 				//This next line makes the y value 0 so that the screen does not move vertically when jumping
 				//m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
-                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce), ForceMode2D.Impulse);
+				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+         //       m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce), ForceMode2D.Impulse);
 				//handels double jumping
 				//this should probibly be converted to a case statment for performance and sanity reasons...
 				//on the up
 			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y > 3) {
-				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpAscent)), ForceMode2D.Impulse);
+				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpAscent)), ForceMode2D.Impulse);
 				hasDoubleJumped = true;
 				//at the crest
 			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y >= -3 && m_Rigidbody2D.velocity.y <= 4) {
-				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpApex)), ForceMode2D.Impulse);
+				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpApex)), ForceMode2D.Impulse);
 				hasDoubleJumped = true;
 				//on descent
 			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y < -4) {
-				m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpDescent)), ForceMode2D.Impulse);
+				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpDescent)), ForceMode2D.Impulse);
 				hasDoubleJumped = true;
 			} else if (!m_Grounded && jump && !hasDoubleJumped){
 				Debug.Log("y force" + m_Rigidbody2D.velocity.y);	//just here for logging things that shouldnt be happening...
