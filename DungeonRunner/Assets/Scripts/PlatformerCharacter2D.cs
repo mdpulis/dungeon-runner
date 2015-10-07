@@ -14,9 +14,7 @@ namespace UnityStandardAssets._2D
 		
 		public bool alowMove = true;			// alows X movment when True
 		private bool hasDoubleJumped = false;	//tracks double jumping
-		public float doubleJumpAscent  = 0.75f;	//multiplier of force for asending double jumps
-		public float doubleJumpApex = 1f;		//multiplier of force for cresting double jumps
-		public float doubleJumpDescent = 1.5f; 	//multiplier of force for descending double jumps
+		private bool jumpBuffer = false;		//buffers jump comands for usage once landed
 		
 		
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
@@ -101,43 +99,37 @@ namespace UnityStandardAssets._2D
                     Flip();
                 }
             }
+			
 			if (m_Grounded) {
-				//clears the doublejump limiter ONLY when grounded
+				if (jumpBuffer) {
+					//fires a jump if a jump has been buffered
+					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+				}
+				//clears the doublejump and jumpbuffer limiter ONLY when grounded
 				hasDoubleJumped = false;
+				jumpBuffer = false;
 			}
             // If the player should jump...
-            if (m_Grounded && jump && m_Anim.GetBool("Ground"))
-            {
-                // Add a vertical force to the player.
+            if (m_Grounded && jump && m_Anim.GetBool("Ground")) {
+                // Add vertical velocity to the player.
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
-				
-				//This next line makes the y value 0 so that the screen does not move vertically when jumping
-				//m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
-         //       m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce), ForceMode2D.Impulse);
+			} else if (!m_Grounded && jump && !hasDoubleJumped) {
 				//handels double jumping
-				//this should probibly be converted to a case statment for performance and sanity reasons...
-				//on the up
-			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y > 3) {
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
-		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpAscent)), ForceMode2D.Impulse);
 				hasDoubleJumped = true;
-				//at the crest
-			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y >= -3 && m_Rigidbody2D.velocity.y <= 4) {
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
-		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpApex)), ForceMode2D.Impulse);
-				hasDoubleJumped = true;
-				//on descent
-			} else if (!m_Grounded && jump && !hasDoubleJumped && m_Rigidbody2D.velocity.y < -4) {
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
-		//		m_Rigidbody2D.AddForce(new Vector2(0f, (m_JumpForce * doubleJumpDescent)), ForceMode2D.Impulse);
-				hasDoubleJumped = true;
-			} else if (!m_Grounded && jump && !hasDoubleJumped){
-				Debug.Log("y force" + m_Rigidbody2D.velocity.y);	//just here for logging things that shouldnt be happening...
+			} else if (!m_Grounded && jump && hasDoubleJumped) {
+				//invokes a temporary state in which hte character will jump at the next posible chance. times out after 1/8th of a second
+				jumpBuffer = true;
+				Invoke("clearJumpBuffer", 0.125f);
 			}
         }
-
+		private void clearJumpBuffer() {
+			jumpBuffer = false;
+			Debug.Log("buffered jump spent");
+			//Move(0f,false,true);
+		}
 
         private void Flip()
         {
