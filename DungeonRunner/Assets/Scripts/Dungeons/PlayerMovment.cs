@@ -32,8 +32,8 @@ public class PlayerMovment : MonoBehaviour {
 	
 	private void Awake() {
 		// Setting up references.
-		groundCheck = transform.Find("groundCheck");
-		ceilingCheck = transform.Find("ceilingCheck");
+		groundCheck = transform.Find("GroundCheck");
+		ceilingCheck = transform.Find("CeilingCheck");
 		animate = GetComponent<Animator>();
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
 	}
@@ -45,10 +45,8 @@ public class PlayerMovment : MonoBehaviour {
 		//float h = CrossPlatformInputManager.GetAxis("Horizontal");
 		// Pass all parameters to the character control script.
 		//m_Character.Move(h, crouch, m_Jump);
-		Move (1f, false, m_Jump, false);
 		
-		//m_Jump = false;
-		//grounded = false;
+		grounded = false;
 		
 		//check if the player is grounded using a circlecast to ground. if it hits, it sticks
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
@@ -56,6 +54,7 @@ public class PlayerMovment : MonoBehaviour {
 			if (colliders[i].gameObject != gameObject)
 				grounded = true;
 		}
+		Move (1f, false, m_Jump, false);
 		
 		animate.SetBool("Ground", grounded);
 		animate.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
@@ -100,85 +99,22 @@ public class PlayerMovment : MonoBehaviour {
 			// If the player should jump...
             if (grounded && jump && animate.GetBool("Ground")) {
                 // Add vertical velocity to the player.
-                grounded = false;
+                Debug.Log("jump1");
+				grounded = false;
                 animate.SetBool("Ground", false);
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
 			} else if (!grounded && jump && !hasDoubleJumped) {
 				//handels double jumping
+				Debug.Log("jump2");
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
 				hasDoubleJumped = true;
 			} else if (!grounded && jump && hasDoubleJumped) {
 				//invokes a temporary state in which hte character will jump at the next posible chance. times out after 1/8th of a second
+				Debug.Log("jump3");
 				jumpBuffer = true;
 				Invoke("clearJumpBuffer", 0.125f);
 			}
-			
-			
-// experimental re write
-			
-			/*
-			
-			if (grounded) {
-				//reduces speed if crouching
-				move = (crouch ? move*0.5f : move);
-				// The Speed animator parameter is set to the absolute value of the horizontal input.
-				animate.SetFloat("Speed", Mathf.Abs(move));
-				//sets the forward velocity
-				m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
-				//exicutes a jump if one is buffered
-				if (jumpBuffer) {
-					//fires a jump if a jump has been buffered
-					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
-				}
-				//clears the doublejump and jumpbuffer limiter
-				hasDoubleJumped = false;
-				jumpBuffer = false;
-				if (jump) {
-					// Add vertical velocity to the player.
-					grounded = false;
-					animate.SetBool("Ground", false);
-					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
-				}
-			} else {
-				if (airAceleration) {
-					//reduces speed if crouching
-					move = (crouch ? move*0.5f : move);
-					// The Speed animator parameter is set to the absolute value of the horizontal input.
-					animate.SetFloat("Speed", Mathf.Abs(move));
-					//sets the forward velocity
-					m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);					
-				}
-				if (jump && !hasDoubleJumped) {
-					//exicutes a second jump regardless of colission
-					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
-					hasDoubleJumped = true;
-				} else if (jump && hasDoubleJumped){
-					//sets the jump buffer and then clears it 1/8th of a secodn later.
-					//this is intended to help with people atempting to jump right when they colide with the ground but at slightly early.
-					jumpBuffer = true;
-					Invoke("clearJumpBuffer", 0.125f);
-				}
-				
-				
-			}
-			
-			
-			
-			*/
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			m_Jump = false;
 		}
 	}
 	
