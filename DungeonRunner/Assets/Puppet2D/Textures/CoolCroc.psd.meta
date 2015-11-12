@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: a875fb591e1c447b191bf8cee15d60f4
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: CoolCrocArmL
+    21300002: CoolCrocArmR
+    21300004: CoolCrocTail
+    21300006: CoolCrocLegR
+    21300008: CoolCrocBody
+    21300010: CoolCrocLegL
+    21300012: CoolCrocCoatEnd
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +42,7 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1

@@ -1,7 +1,12 @@
 fileFormatVersion: 2
 guid: aa7bc49b0b77d1f4f9dbcf3cb8f4e445
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: MonsterAxe
+    21300002: MonsterArmR
+    21300004: MonsterArmL
+    21300006: MonsterBody
+    21300008: MonsterSash
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +40,7 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1

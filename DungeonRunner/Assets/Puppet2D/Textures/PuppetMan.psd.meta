@@ -1,7 +1,15 @@
 fileFormatVersion: 2
 guid: bf63ab198017497449233107fb6b931c
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: PuppetMan_head
+    21300002: PuppetMan_armTop
+    21300004: PuppetMan_gunSide
+    21300006: PuppetMan_armR
+    21300008: PuppetMan_leg
+    21300010: PuppetMan_armBottom
+    21300012: PuppetMan_gunTop
+    21300014: PuppetMan_body
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +43,7 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
