@@ -1,9 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\General\DataContainer.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlatformerCharacter2D.cs">
     <Files>
-      <File FileName="Assets\Scripts\General\DataContainer.cs" Line="11" Column="47" />
-      <File FileName="Assets\Scripts\Dungeons\PlayerParameters.cs" Line="35" Column="27" />
+      <File FileName="Assets\Scripts\Dungeons\PlayerMovment.cs" Line="130" Column="2" />
+      <File FileName="Assets\Scripts\PlatformerCharacter2D.cs" Line="34" Column="44" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

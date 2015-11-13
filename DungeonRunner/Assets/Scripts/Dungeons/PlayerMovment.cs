@@ -11,7 +11,7 @@ public class PlayerMovment : MonoBehaviour {
 	private 	bool 		jumpBuffer = false;		// tracks jump comands, useed for buffering when jumped
 	public 		float 		maxSpeed = 10f;			// max speed the player can travel
 	public 		float 		jumpForce = 200f;		// vertical force when jumping
-	public		bool 		airAceleration = false;		// Whether or not a player can steer while jumping;
+	public		bool		alowAirAceleration = true;	// permits the player to acelerate on asecnt of jumps
 	public		bool		stopPlayer = false;		//prevents input but alos physics
 	
 	[SerializeField] private 	LayerMask 	whatIsGround;			// A mask determining what is ground to the character
@@ -73,13 +73,20 @@ public class PlayerMovment : MonoBehaviour {
 //----------------------------------------------------------------------------------------------------------------------
 			
 			//only sets the characters forward vector when grounded or air aceleration is permitted
-			if (grounded || airAceleration) {
+			if (grounded) {
 				//reduces speed if crouching
 				move = (crouch ? move*0.5f : move);
 				// The Speed animator parameter is set to the absolute value of the horizontal input.
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				//sets the forward velocity
 				m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
+			} else if (alowAirAceleration) {
+				animate.SetFloat("Speed", Mathf.Abs(move));
+				
+				//only acelerates on the asent of the jump.
+				if (m_Rigidbody2D.velocity.y > 1) {
+					m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
+				}
 			}
 			
 //----------------------------------------------------------------------------------------------------------------------
