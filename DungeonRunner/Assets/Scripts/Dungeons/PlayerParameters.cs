@@ -49,10 +49,10 @@ public class PlayerParameters : MonoBehaviour{
 
 		StartCoroutine (FlashingEffect(0.20f));
 		//Knockback effect. Needs some work. If you guys wanna look into this, please do.
-		transform.position = new Vector3(Mathf.Lerp (
-			transform.position.x,
-			transform.position.x - KNOCKBACK,
-			0.5f), transform.position.y, transform.position.z);
+	//	transform.position = new Vector3(Mathf.Lerp (
+	//		transform.position.x,
+	//		transform.position.x - KNOCKBACK,
+	//		0.5f), transform.position.y, transform.position.z);
 		UnityEngine.Debug.Log ("Rendering invisible!");
 	}
 

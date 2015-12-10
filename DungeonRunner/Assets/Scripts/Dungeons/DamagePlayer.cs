@@ -16,6 +16,9 @@ public class DamagePlayer : MonoBehaviour {
 				Scoring.score -= scoreReduction;
 				other.GetComponent<PlayerParameters>().InflictDamage(inflictDamage, statusEffectType);
 				//Destroy(this.gameObject); //Destroy itself to prevent from being called multiple times
+				
+				other.GetComponent<PlayerMovment>().Damage(1);
+				//triggers the kick back from taking damage
 			}
 
 			

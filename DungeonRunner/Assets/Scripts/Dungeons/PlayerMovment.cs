@@ -7,12 +7,14 @@ using UnityStandardAssets.CrossPlatformInput;
 public class PlayerMovment : MonoBehaviour {
 	
 	public 		bool 		alowMove = true;		// tracks X movment permissions
-	private 	bool 		hasDoubleJumped = false;// tracks if player has double jumped
-	private 	bool 		jumpBuffer = false;		// tracks jump comands, useed for buffering when jumped
+	public		bool		AlowAirAceleration = true;	// permits the player to acelerate on asecnt of jumps
+	public 		bool 		hasDoubleJumped = false;// tracks if player has double jumped
+	public 		bool 		jumpBuffer = false;		// tracks jump comands, useed for buffering when jumped
 	public 		float 		maxSpeed = 10f;			// max speed the player can travel
 	public 		float 		jumpForce = 200f;		// vertical force when jumping
-	public		bool		alowAirAceleration = true;	// permits the player to acelerate on asecnt of jumps
-	public		bool		stopPlayer = false;		//prevents input but alos physics
+	public		bool		stopPlayer = false;		// prevents input but alows physics
+	public		bool		recentDamage = false;	// tracks if the damage thigns been triggered
+	public		bool		AlowAirAcelerationWhenDamage = false; // prevents air aceleration from interupting damage feedback
 	
 	[SerializeField] private 	LayerMask 	whatIsGround;			// A mask determining what is ground to the character
 	const 		float 		groundedRadius = .2f;	// Radius of the overlap circle to determine if grounded
@@ -53,8 +55,9 @@ public class PlayerMovment : MonoBehaviour {
 		for (int i = 0; i < colliders.Length; i++) {
 			if (colliders[i].gameObject != gameObject)
 				grounded = true;
+				if (!recentDamage) {AlowAirAcelerationWhenDamage = true;}
 		}
-		Move (1f, false, m_Jump, false);
+		Move (1f, false, m_Jump, false, false);
 		
 		animate.SetBool("Ground", grounded);
 		animate.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
@@ -67,24 +70,32 @@ public class PlayerMovment : MonoBehaviour {
 		}
 	}
 	
-	public void Move(float move, bool crouch, bool jump, bool sprint) {
+	public void Damage(float force) {
+		//stopPlayer = true;
+		Debug.Log("Damage feedback triggered");
+		Move (1f, false, false, false, true);
+	}
+	
+	public void Move(float move, bool crouch, bool jump, bool sprint, bool damage) {
 		if (!stopPlayer) {
 			
 //----------------------------------------------------------------------------------------------------------------------
-			
+			move = (crouch ? move*0.5f : move);
 			//only sets the characters forward vector when grounded or air aceleration is permitted
-			if (grounded) {
+			if (!recentDamage && grounded) {
+				if (recentDamage) {Debug.Log("!!! GROUND");}
 				//reduces speed if crouching
-				move = (crouch ? move*0.5f : move);
+				
 				// The Speed animator parameter is set to the absolute value of the horizontal input.
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				//sets the forward velocity
 				m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
-			} else if (alowAirAceleration) {
+			} else if (AlowAirAcelerationWhenDamage && AlowAirAceleration) {
+				if (recentDamage) {Debug.Log("!!! AIR");}
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				
 				//only acelerates on the asent of the jump.
-				if (m_Rigidbody2D.velocity.y > 1) {
+				if (m_Rigidbody2D.velocity.y > 5) {
 					m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
 				}
 			}
@@ -122,6 +133,19 @@ public class PlayerMovment : MonoBehaviour {
 				Invoke("clearJumpBuffer", 0.125f);
 			}
 			m_Jump = false;
+			
+//----------------------------------------------------------------------------------------------------------------------
+			
+			//damage
+			if (damage) {
+				recentDamage = true;
+				grounded = false;
+				AlowAirAcelerationWhenDamage = false;
+				animate.SetBool("Ground", false);
+				//animate.SetBool("Damage", true);
+				m_Rigidbody2D.velocity = new Vector2(((move*maxSpeed) / -1f), jumpForce);
+				Invoke("clearDamage", 0.5f);
+			}
 		}
 	}
 	
@@ -130,7 +154,11 @@ public class PlayerMovment : MonoBehaviour {
 		jumpBuffer = false;
 		Debug.Log("buffered jump spent");
 	}
-	
+	//clears the recent damage value
+	public void clearDamage() {
+		recentDamage = false;
+		Debug.Log("Damage jump cleared");
+	}
 	
 	
 	
