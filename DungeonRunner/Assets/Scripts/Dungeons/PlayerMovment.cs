@@ -15,6 +15,7 @@ public class PlayerMovment : MonoBehaviour {
 	public		bool		stopPlayer = false;		// prevents input but alows physics
 	public		bool		recentDamage = false;	// tracks if the damage thigns been triggered
 	public		bool		AlowAirAcelerationWhenDamage = false; // prevents air aceleration from interupting damage feedback
+	private		float		deAceleration = 10f;	// slows player movments, only use for gradent aceleration.
 	
 	[SerializeField] private 	LayerMask 	whatIsGround;			// A mask determining what is ground to the character
 	const 		float 		groundedRadius = .2f;	// Radius of the overlap circle to determine if grounded
@@ -71,32 +72,46 @@ public class PlayerMovment : MonoBehaviour {
 	}
 	
 	public void Damage(float force) {
+		//force is how hard far the player jumps back
 		//stopPlayer = true;
-		Debug.Log("Damage feedback triggered");
-		Move (1f, false, false, false, true);
+		Debug.Log("Damage feedback triggered for force of: " + force);
+		Move (force, false, false, false, true);
+	}
+	
+	public void Notmoving() {
+		deAceleration = 10f;
+		animate.SetBool("standing", grounded);
 	}
 	
 	public void Move(float move, bool crouch, bool jump, bool sprint, bool damage) {
-		if (!stopPlayer) {
+		if (!stopPlayer) {  //prevents player movment, may be usefull?
 			
-//----------------------------------------------------------------------------------------------------------------------
+//------------------------------------//!!!SETS FORWARD MOVMENT!!!//-----------------------------------------------------
+			//reduces speed if crouching
 			move = (crouch ? move*0.5f : move);
 			//only sets the characters forward vector when grounded or air aceleration is permitted
 			if (!recentDamage && grounded) {
 				if (recentDamage) {Debug.Log("!!! GROUND");}
-				//reduces speed if crouching
+				//
+				if (deAceleration > 1f) {
+					deAceleration = deAceleration - (0.25f * deAceleration);
+					if (deAceleration < 1) {deAceleration = 1f;};
+					Debug.Log("acelerating-"+deAceleration);
+				}
+				
+				
 				
 				// The Speed animator parameter is set to the absolute value of the horizontal input.
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				//sets the forward velocity
-				m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
+				m_Rigidbody2D.velocity = new Vector2(move*maxSpeed/deAceleration, m_Rigidbody2D.velocity.y);
 			} else if (AlowAirAcelerationWhenDamage && AlowAirAceleration) {
 				if (recentDamage) {Debug.Log("!!! AIR");}
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				
 				//only acelerates on the asent of the jump.
 				if (m_Rigidbody2D.velocity.y > 5) {
-					m_Rigidbody2D.velocity = new Vector2(move*maxSpeed, m_Rigidbody2D.velocity.y);
+					m_Rigidbody2D.velocity = new Vector2(move*maxSpeed/deAceleration, m_Rigidbody2D.velocity.y);
 				}
 			}
 			
@@ -144,6 +159,8 @@ public class PlayerMovment : MonoBehaviour {
 				animate.SetBool("Ground", false);
 				//animate.SetBool("Damage", true);
 				m_Rigidbody2D.velocity = new Vector2(((move*maxSpeed) / -1f), jumpForce);
+				deAceleration = 10f;
+				//InvokeRepeating("deAcelerationdecreas", 1f, 0.25f);
 				Invoke("clearDamage", 0.5f);
 			}
 		}
@@ -159,7 +176,10 @@ public class PlayerMovment : MonoBehaviour {
 		recentDamage = false;
 		Debug.Log("Damage jump cleared");
 	}
-	
+	public void deAcelerationdecreas() {
+		deAceleration = deAceleration + 0.5f;
+		Debug.Log("acelerating");
+	}
 	
 	
 }

@@ -66,8 +66,8 @@ public class PlayerParameters : MonoBehaviour{
 			currentlyInvisible = true;
 		}
 
-		UnityEngine.Debug.Log ("Stopwatch: " + TimeSpanUtil.ConvertMillisecondsToSeconds (invincibilityStopwatch.ElapsedMilliseconds));
-		UnityEngine.Debug.Log ("Invincibility Time: " + invincibilityTime);
+		//UnityEngine.Debug.Log ("Stopwatch: " + TimeSpanUtil.ConvertMillisecondsToSeconds (invincibilityStopwatch.ElapsedMilliseconds));
+		//UnityEngine.Debug.Log ("Invincibility Time: " + invincibilityTime);
 		
 
 		//If our invincibility time is up, then we turn ourselves back to full color and vulnerable again
