@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+[CanEditMultipleObjects]
 [CustomEditor(typeof(Puppet2D_FFDLineDisplay))] 
 public class Puppet2D_FFDLineDisplayEditor : Editor 
 {

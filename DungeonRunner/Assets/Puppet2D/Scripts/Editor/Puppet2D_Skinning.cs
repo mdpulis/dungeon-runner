@@ -519,13 +519,25 @@ public class Puppet2D_Skinning : Editor
             sharedMesh.boneWeights = weights;
             sharedMesh.bindposes = bindPoses;
             renderer.bones = selectedBones.ToArray();
-            renderer.sharedMesh = sharedMesh;
-            if (mat)
-                renderer.sharedMaterial = mat;
-            renderer.sortingLayerName = sortingLayer;
-            renderer.sortingOrder = sortingOrder;
-            mesh.AddComponent<Puppet2D_SortingLayer>();
-            sharedMesh.colors = new Color[sharedMesh.vertices.Length];
+            
+			if(sharedMesh.colors.Length ==0)
+			{
+            	Color[] newColors = new Color[sharedMesh.vertices.Length];
+
+				for (int i=0; i<sharedMesh.vertices.Length; i++)
+				{
+					newColors [i] = new Color (1f, 1f, 1f, 1f);
+				}
+				sharedMesh.colors = newColors;
+			}
+
+			renderer.sharedMesh = sharedMesh;
+			if (mat)
+				renderer.sharedMaterial = mat;
+			renderer.sortingLayerName = sortingLayer;
+			renderer.sortingOrder = sortingOrder;
+			mesh.AddComponent<Puppet2D_SortingLayer>();
+
             EditorUtility.SetDirty(mesh);
             EditorUtility.SetDirty(sharedMesh);
             AssetDatabase.SaveAssets();
@@ -784,43 +796,84 @@ public class Puppet2D_Skinning : Editor
 			float sqrMagnitude = (vertices[i] - pos).magnitude;
 			if (sqrMagnitude > Puppet2D_Editor.EditSkinWeightRadius)
 				continue;
-			if(weightStrength>0)
-				colrs[i] = Color.Lerp( colrs[i],Color.white, Puppet2D_Editor.paintWeightsStrength*Puppet2D_Editor.paintWeightsStrength);
-			else
-				colrs[i] = Color.Lerp( colrs[i],Color.black,Puppet2D_Editor.paintWeightsStrength* Puppet2D_Editor.paintWeightsStrength);
-			
+			float weightFloat = Puppet2D_Editor.paintWeightsStrength* Puppet2D_Editor.paintWeightsStrength* Puppet2D_Editor.paintWeightsStrength;
+
+//			Color weightColor = new Color (weightFloat, weightFloat, weightFloat, 1);
+//			if(weightStrength>0)
+//				if(colrs[i].r <=1)
+//					colrs[i] = colrs[i]+weightColor;//colrs[i] = Color.Lerp( colrs[i],Color.white, Puppet2D_Editor.paintWeightsStrength*Puppet2D_Editor.paintWeightsStrength);
+//			else
+//				if(colrs[i].r >=0)
+//					colrs[i] -= weightColor;//colrs[i] = Color.Lerp( colrs[i],Color.black,Puppet2D_Editor.paintWeightsStrength* Puppet2D_Editor.paintWeightsStrength);
+//			
+
+
+
 			if (boneWeights[i].boneIndex0 == boneIndex)
 			{
+				if(weightStrength>0)
+					boneWeights[i].weight0 += weightFloat ;
+				else
+					boneWeights[i].weight0 -= weightFloat ;
 
-				boneWeights[i].weight0 = colrs[i].r;
-				boneWeights[i].weight1 = 1-colrs[i].r;
+				boneWeights[i].weight0 = Mathf.Clamp01 (boneWeights [i].weight0);
+				boneWeights[i].weight1 = 1-boneWeights[i].weight0;
+				colrs[i] = new Color (boneWeights[i].weight0, boneWeights[i].weight0, boneWeights[i].weight0, 1);
+				//boneWeights[i].weight0 = colrs[i].r;
+				//boneWeights[i].weight1 = 1-colrs[i].r;
 			
 			}
 			else if (boneWeights[i].boneIndex1 == boneIndex)
 			{
+				if(weightStrength>0)
+					boneWeights[i].weight1 += weightFloat ;
+				else
+					boneWeights[i].weight1 -= weightFloat ;
 
-				boneWeights[i].weight1 = colrs[i].r;
-				boneWeights[i].weight0 = 1-colrs[i].r;
+				boneWeights[i].weight1 = Mathf.Clamp01 (boneWeights [i].weight1);
+				boneWeights[i].weight0 = 1-boneWeights[i].weight1;
+				colrs[i] = new Color (boneWeights[i].weight1, boneWeights[i].weight1, boneWeights[i].weight1, 1);
 
-				
+				//boneWeights[i].weight1 = colrs[i].r;
+				//boneWeights[i].weight0 = 1-colrs[i].r;
+
+
 			}
-			else if (colrs[i].r != 0 || boneWeights[i].weight1 + boneWeights[i].weight2 + boneWeights[i].weight3 > 0)
+			else if (weightFloat!= 0 || boneWeights[i].weight1 + boneWeights[i].weight2 + boneWeights[i].weight3 > 0)
 			{
 				if(boneWeights[i].weight0<boneWeights[i].weight1)
 				{
-					boneWeights[i].weight0 = colrs[i].r ;
+
+					if(weightStrength>0)
+						boneWeights[i].weight0 += weightFloat ;
+					else
+						boneWeights[i].weight0 -= weightFloat ;
+
+					boneWeights[i].weight0 = Mathf.Clamp01 (boneWeights [i].weight0);
+					boneWeights[i].weight1 = 1-boneWeights[i].weight0;
+					colrs[i] = new Color (boneWeights[i].weight0, boneWeights[i].weight0, boneWeights[i].weight0, 1);
+
 					boneWeights[i].boneIndex0 = boneIndex;
-					boneWeights[i].weight1 = 1-colrs[i].r ;
+
+
 				}
 				else
 				{
-					boneWeights[i].weight1 = colrs[i].r ;
+					if(weightStrength>0)
+						boneWeights[i].weight1 += weightFloat ;
+					else
+						boneWeights[i].weight1 -= weightFloat ;
+
+					boneWeights[i].weight1 = Mathf.Clamp01 (boneWeights [i].weight1);
+					boneWeights[i].weight0 = 1-boneWeights[i].weight1;
+					colrs[i] = new Color (boneWeights[i].weight1, boneWeights[i].weight1, boneWeights[i].weight1, 1);
+
 					boneWeights[i].boneIndex1 = boneIndex;
-					boneWeights[i].weight0 = 1-colrs[i].r ;
+
+
 				}
 			}
 
-			
 			
 		}
 		

@@ -36,6 +36,14 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
 	[HideInInspector]
 	public int _flipCorrection = 1;
 
+	// CACHED VALUES
+
+	private Transform myTransform;
+	private Puppet2D_SplineControl[] _SplineControlsArray;
+	private Puppet2D_IKHandle[] _IkhandlesArray;
+	private Puppet2D_ParentControl[] _ParentControlsArray;
+	private Puppet2D_FFDLineDisplay[] _ffdControlsArray;
+
 	//public float boneSize;
 	// Use this for initialization
 	void OnEnable () 
@@ -51,6 +59,7 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
             _FFDControls.Clear();
             _ffdControls.Clear();
 			TraverseHierarchy(transform);
+			InitializeArrays ();
 		}
 
 	}
@@ -64,10 +73,11 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
         _FFDControls.Clear();
         _ffdControls.Clear();
 		TraverseHierarchy(transform);
-
+		InitializeArrays ();
 	}
 	void Awake () 
 	{
+		this.myTransform = this.GetComponent<Transform>();
 
 		internalFlip = flip;
 		if(Application.isPlaying)
@@ -79,6 +89,17 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
 
 
 	}
+	void Start()
+	{
+
+	}
+	public void InitializeArrays()
+	{
+		_SplineControlsArray = _SplineControls.ToArray();
+		_IkhandlesArray = _Ikhandles.ToArray();
+		_ParentControlsArray = _ParentControls.ToArray();
+		_ffdControlsArray = _ffdControls.ToArray();
+	} 
 	// Update is called once per frame
 	public void Init()
 	{ 
@@ -91,6 +112,7 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
         _FFDControls.Clear();  
         _ffdControls.Clear(); 
 		TraverseHierarchy(transform);
+		InitializeArrays ();
 
 	}
 	void OnValidate ()
@@ -107,6 +129,7 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
             _FFDControls.Clear();
             _ffdControls.Clear();
             TraverseHierarchy(transform);
+			InitializeArrays ();
         }
 		foreach(SpriteRenderer ctrl in _Controls)
 		{
@@ -247,27 +270,27 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
 	public void Run () 
 	{
 
-        foreach(Puppet2D_SplineControl spline in _SplineControls)
-        {
-            if(spline)
-                spline.Run();
-        }
-        foreach(Puppet2D_ParentControl parentControl in _ParentControls)
+		for (int i = 0; i < _SplineControlsArray.Length; i++) 
 		{
-			if(parentControl)
-				parentControl.ParentControlRun();
+			if (_SplineControlsArray [i])
+				_SplineControlsArray [i].Run ();
+		}
+		for (int i = 0; i < _ParentControlsArray.Length; i++) 
+		{
+			if ( _ParentControlsArray [i])
+				_ParentControlsArray [i].ParentControlRun ();
 		}
 		FaceCamera();
-		foreach(Puppet2D_IKHandle ik in _Ikhandles)
+		for (int i = 0; i < _IkhandlesArray.Length; i++) 
 		{
-			if(ik)
-				ik.CalculateIK();
+			if (_IkhandlesArray [i])
+				_IkhandlesArray [i].CalculateIK ();
 		}
-        foreach(Puppet2D_FFDLineDisplay ffd in _ffdControls)
-        {
-            if(ffd)
-                ffd.Run();
-        }
+		for (int i = 0; i < _ffdControlsArray.Length; i++) 
+		{
+			if (_ffdControlsArray [i])
+				_ffdControlsArray [i].Run ();
+		}
 
 
 
@@ -454,16 +477,12 @@ public class Puppet2D_GlobalControl : MonoBehaviour {
 		transform.rotation = originalRot;
 		transform.position =originalPos;
 	}
-	void FaceCamera(){
-
-		foreach (Puppet2D_IKHandle p in _Ikhandles) 
+	private void FaceCamera()
+	{
+		for (int i = 0; i < this._IkhandlesArray.Length; ++i)
 		{
-
-			p.AimDirection = transform.forward.normalized *_flipCorrection; 
-
-			//change the aiming of IK to the forward vector of the camera 
-
+			this._IkhandlesArray[i].AimDirection = this.myTransform.forward.normalized * _flipCorrection;
 		}
-
 	}
+
 }

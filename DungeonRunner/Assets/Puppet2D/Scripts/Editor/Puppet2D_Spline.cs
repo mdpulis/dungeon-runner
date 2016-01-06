@@ -63,6 +63,7 @@ public class Puppet2D_Spline : Editor {
             globalCtrl.GetComponent<Puppet2D_GlobalControl>()._SplineControls.Add(spline);
             SplineCreationGroup.transform.parent = globalCtrl.transform;
 
+			globalCtrl.GetComponent<Puppet2D_GlobalControl>().InitializeArrays();
             globalCtrl.GetComponent<Puppet2D_GlobalControl>().Run();
 
             Undo.DestroyObjectImmediate(splineStoreData);
@@ -80,6 +81,7 @@ public class Puppet2D_Spline : Editor {
 					if (hiddenBone && hiddenBone.transform.parent && hiddenBone.transform.parent.parent == null)
 						hiddenBone.transform.parent.parent = globalCtrl.transform;
 				}
+
 			}
 
         }

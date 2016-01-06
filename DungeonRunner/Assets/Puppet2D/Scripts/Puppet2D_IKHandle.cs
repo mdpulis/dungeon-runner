@@ -52,6 +52,7 @@ public class Puppet2D_IKHandle: MonoBehaviour
 
 	public bool limitBones = true;
 
+
     /*
 	void LateUpdate () 
     {
@@ -137,7 +138,7 @@ public class Puppet2D_IKHandle: MonoBehaviour
         if (SquashAndStretch)
         {
             topJointTransform.localScale = scaleStart[0];
-            middleJointTransform.localScale = scaleStart[1];
+            //middleJointTransform.localScale = scaleStart[1];
         }
 
         float topLength = Vector3.Distance(topJointTransform.position, middleJointTransform.position);
@@ -183,6 +184,7 @@ public class Puppet2D_IKHandle: MonoBehaviour
 		{
 			angleLimits [i] = new Vector2 (Mathf.Clamp (angleLimits [i] .x, -360, 360), Mathf.Clamp (angleLimits [i] .y, -360, 360));
 		}
+
 
 	}
 

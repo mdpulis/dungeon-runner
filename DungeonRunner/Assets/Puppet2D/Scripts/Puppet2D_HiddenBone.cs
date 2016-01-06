@@ -8,43 +8,50 @@ public class Puppet2D_HiddenBone : MonoBehaviour
 	public Transform boneToAimAt;
 	public bool InEditBoneMode = false;
 	public GameObject[] _newSelection;
-    void LateUpdate()
+
+	#if UNITY_EDITOR
+	void LateUpdate()
     {
-		if (GetComponent<Renderer>().enabled)
-        {
-            if ((boneToAimAt) && (transform.parent))
-            {
-                Transform myParent = transform.parent;
-                transform.parent = null;
+		if (!Application.isPlaying)
+		{
 
-                float dist = Vector3.Distance(boneToAimAt.position, transform.position);
-                if (dist > 0)
-                    transform.rotation = Quaternion.LookRotation(boneToAimAt.position - transform.position, Vector3.forward) * Quaternion.AngleAxis(90, Vector3.right);
+			if (GetComponent<Renderer>().enabled)
+	        {
+	            if ((boneToAimAt) && (transform.parent))
+	            {
+	                Transform myParent = transform.parent;
+	                transform.parent = null;
 
-                float length = (boneToAimAt.position - transform.position).magnitude;
+	                float dist = Vector3.Distance(boneToAimAt.position, transform.position);
+	                if (dist > 0)
+	                    transform.rotation = Quaternion.LookRotation(boneToAimAt.position - transform.position, Vector3.forward) * Quaternion.AngleAxis(90, Vector3.right);
 
-                // float length = (boneToAimAt.position - transform.position).magnitude;
-                transform.localScale = new Vector3(length, length, length); 
-                if (myParent)
-                {
-                    transform.parent = myParent;
-                    transform.position = myParent.position;
-                    if (myParent.GetComponent<SpriteRenderer>())
-                        transform.GetComponent<SpriteRenderer>().sortingLayerName = myParent.GetComponent<SpriteRenderer>().sortingLayerName;
+	                float length = (boneToAimAt.position - transform.position).magnitude;
 
-                }
-                transform.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
-                //transform.hideFlags = HideFlags.None;
-            }
-            else
-            {   
-                DestroyImmediate(gameObject);
-            }
+	                // float length = (boneToAimAt.position - transform.position).magnitude;
+	                transform.localScale = new Vector3(length, length, length); 
+	                if (myParent)
+	                {
+	                    transform.parent = myParent;
+	                    transform.position = myParent.position;
+	                    if (myParent.GetComponent<SpriteRenderer>())
+	                        transform.GetComponent<SpriteRenderer>().sortingLayerName = myParent.GetComponent<SpriteRenderer>().sortingLayerName;
+
+	                }
+	                transform.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
+	                //transform.hideFlags = HideFlags.None;
+	            }
+	            else
+	            {   
+	                DestroyImmediate(gameObject);
+	            }
 
 
-        }
+	        }
+		}
 
     }
+	#endif
 	public void Refresh()
     {
         if (boneToAimAt)

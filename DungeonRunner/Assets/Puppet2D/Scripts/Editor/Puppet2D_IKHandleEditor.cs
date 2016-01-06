@@ -12,6 +12,8 @@ public class Puppet2D_IKHandleEditor : Editor
 //	private List<Quaternion> bindPose;
 //	private List<Transform> bindBones;
 
+	private bool _SquashAndStretch = false;
+
 	public void OnEnable()
 	{
 		Puppet2D_IKHandle myTarget = (Puppet2D_IKHandle)target;
@@ -66,8 +68,13 @@ public class Puppet2D_IKHandleEditor : Editor
 
 		if ((target as Puppet2D_IKHandle).numberIkBonesIndex == 0) 
 		{
-			myTarget.Flip = EditorGUILayout.Toggle ("Flip", myTarget.Flip);
-
+			EditorGUI.BeginChangeCheck ();
+			bool f = EditorGUILayout.Toggle ("Flip", myTarget.Flip);
+			if (EditorGUI.EndChangeCheck ()) 
+			{
+				Undo.RecordObject (myTarget, "Toggle Flip");
+				myTarget.Flip = f;
+			}
 			myTarget.SquashAndStretch = EditorGUILayout.Toggle ("SquashAndStretch", myTarget.SquashAndStretch);
 			myTarget.Scale = EditorGUILayout.Toggle ("Scale", myTarget.Scale);
 
@@ -105,7 +112,14 @@ public class Puppet2D_IKHandleEditor : Editor
 
 
 		if(GUI.changed)
+		{
+			if(_SquashAndStretch && !myTarget.SquashAndStretch)
+				myTarget.topJointTransform.localScale = myTarget.scaleStart[0];
+
+			_SquashAndStretch = myTarget.SquashAndStretch;
+
 			EditorUtility.SetDirty(myTarget);
+		}
 
 
 
@@ -249,6 +263,17 @@ public class Puppet2D_IKHandleEditor : Editor
 		}
 		//CreateNodeCache (myTarget);
 //		Debug.Log ("start " + myTarget.startTransform + " end " + myTarget.endTransform); 
+	}
+	void OnValidate()
+	{
+		Puppet2D_IKHandle myTarget = (Puppet2D_IKHandle)target;
+
+		if (myTarget.SquashAndStretch)
+			Debug.Log ("Sqiuash");
+		else
+			Debug.Log ("normal");
+
+
 	}
 
 

@@ -496,8 +496,22 @@ public class Puppet2D_Editor : EditorWindow
 								Undo.RegisterCreatedObjectUndo (tempSprite, "tempSprite");
 								SpriteRenderer spriteRender = tempSprite.AddComponent<SpriteRenderer> ();
 
-								Sprite thisSprite = AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(smr.sharedMaterial.mainTexture) ,typeof(Sprite)) as Sprite;
-
+								Sprite thisSprite = null;// = AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(smr.sharedMaterial.mainTexture) ,typeof(Sprite)) as Sprite;
+								Sprite[] sprites = AssetDatabase.LoadAllAssetsAtPath( AssetDatabase.GetAssetPath(smr.sharedMaterial.mainTexture) ).OfType<Sprite>().ToArray();
+								foreach (Sprite s in sprites) 
+								{
+									if( s.name == ffdctrl.GetComponentInChildren<Puppet2D_FFDLineDisplay>().outputSkinnedMesh.name)
+									{
+										thisSprite = s;
+										break;
+									}
+								}
+								if(thisSprite == null) 
+								{
+									DestroyImmediate (tempSprite);
+									return;
+								}
+								//Debug.Log (AssetDatabase.GetAssetPath (smr.sharedMaterial.mainTexture));
 								spriteRender.sprite = thisSprite;
 								tempSprite.transform.position = storeData.transform.position;
 								tempSprite.name = smr.gameObject.name;
@@ -1084,9 +1098,9 @@ public class Puppet2D_Editor : EditorWindow
 		Sprite sprite =AssetDatabase.LoadAssetAtPath(path, typeof(Sprite)) as Sprite;
 		TextureImporter textureImporter = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(sprite)) as TextureImporter;
 		#if (!UNITY_4_3 && !UNITY_4_4 && !UNITY_4_5 && !UNITY_4_6)
-		textureImporter.spritePixelsPerUnit = (1-ControlSize)*(1-ControlSize)*1000f;
+		textureImporter.spritePixelsPerUnit = (1-VertexHandleSize)*(1-VertexHandleSize)*1000f;
 		#else
-		textureImporter.spritePixelsToUnits = (1-ControlSize)*(1-ControlSize)*1000f;
+		textureImporter.spritePixelsToUnits = (1-VertexHandleSize)*(1-VertexHandleSize)*1000f;
 		#endif
 		AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
 	}
@@ -1173,12 +1187,38 @@ public class Puppet2D_Editor : EditorWindow
 			
 			Vector3[] vertices =  currentSelectionMesh.vertices;
 			Color[] colrs  =  currentSelectionMesh.colors;			
-			
+			BoneWeight[] boneWeights =  Puppet2D_Editor.currentSelectionMesh.boneWeights;
+
 			SkinnedMeshRenderer smr = currentSelection.GetComponent<SkinnedMeshRenderer>();
 			//Debug.Log("pos is " +pos);
 			for (int i=0;i<vertices.Length;i++)
 			{
+
 				colrs[i]=Color.black;
+
+				//If both bones are this bone copy weights to first bone
+				if (currentSelectionMesh.boneWeights[i].boneIndex0==smr.bones.ToList().IndexOf( paintWeightsBone.transform) && currentSelectionMesh.boneWeights[i].boneIndex1==smr.bones.ToList().IndexOf( paintWeightsBone.transform) )
+				{
+					boneWeights[i].weight0 = currentSelectionMesh.boneWeights[i].weight0 + currentSelectionMesh.boneWeights[i].weight1;
+					boneWeights [i].weight1 = 0;
+
+					currentSelectionMesh.boneWeights = boneWeights;
+				}
+				//normalize weights
+				if (boneWeights[i].weight0 + boneWeights[i].weight1 != 1 )
+				{
+					if(boneWeights[i].weight0 + boneWeights[i].weight1 <=0)
+					{
+						boneWeights [i].weight0 = 1;
+						boneWeights [i].boneIndex0 = 1;
+
+					}
+					boneWeights [i].weight0 = boneWeights [i].weight0 / (boneWeights [i].weight0 + boneWeights [i].weight1);
+					boneWeights [i].weight1 = 1 - boneWeights [i].weight0 ;
+
+					currentSelectionMesh.boneWeights = boneWeights;
+				}
+
 				if(smr.bones.ToList().IndexOf( paintWeightsBone.transform) >-1&&  currentSelectionMesh.boneWeights[i].boneIndex0==smr.bones.ToList().IndexOf( paintWeightsBone.transform))
 					colrs[i] =new Color( currentSelectionMesh.boneWeights[i].weight0, currentSelectionMesh.boneWeights[i].weight0, currentSelectionMesh.boneWeights[i].weight0);
 				else if(smr.bones.ToList().IndexOf( paintWeightsBone.transform)>-1 &&  currentSelectionMesh.boneWeights[i].boneIndex1==smr.bones.ToList().IndexOf( paintWeightsBone.transform))
