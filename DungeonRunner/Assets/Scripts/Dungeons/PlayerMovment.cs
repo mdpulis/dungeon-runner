@@ -70,6 +70,7 @@ public class PlayerMovment : MonoBehaviour {
 		for (int i = 0; i < collidersForward.Length; i++) {
 			if (collidersForward[i].gameObject != gameObject) {
 				Debug.Log("we colided!");
+				Notmoving();
 				//grounded = true;
 				//if (!recentDamage) {alowAirAcelerationWhenDamage = true;}
 			}
@@ -96,8 +97,7 @@ public class PlayerMovment : MonoBehaviour {
 	
 	public void Notmoving() {
 		deAcelerationStoped = 10f;
-		animate.SetBool("standing", grounded);
-		animate.SetFloat("Speed", Mathf.Abs(0f));
+		//animate.SetFloat("Speed", Mathf.Abs(0f));
 	}
 	
 	public void Move(float move, bool crouch, bool jump, bool sprint, bool damage) {
@@ -105,17 +105,20 @@ public class PlayerMovment : MonoBehaviour {
 			
 //------------------------------------//!!!SETS FORWARD MOVMENT!!!//-----------------------------------------------------
 			
-			
+			//handels the ckecks for alowing double jump after taking damage
+			if (jump && !recentDamage) {
+				//Debug.Log(recentDamage + " : " + grounded);
+				deAceleration = 1f;
+				alowAirAcelerationWhenDamage = true;
+			}
 			//reduces speed if crouching
 			move = (crouch ? move*0.5f : move);
 			//only sets the characters forward vector when grounded or air aceleration is permitted
 			if (!recentDamage && grounded) {
-				if (recentDamage) {Debug.Log("!!! GROUND");}
-				//
 				if (deAceleration > 1f) {
 					deAceleration = deAceleration - (0.25f * deAceleration);
 					if (deAceleration < 1) {deAceleration = 1f;};
-					Debug.Log("acelerating-"+deAceleration);
+					//Debug.Log("acelerating-"+deAceleration);
 				}
 				
 				// The Speed animator parameter is set to the absolute value of the horizontal input.
@@ -153,7 +156,7 @@ public class PlayerMovment : MonoBehaviour {
 				grounded = false;
                 animate.SetBool("Ground", false);
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
-			} else if (!grounded && jump && !hasDoubleJumped) {
+			} else if (!grounded && jump && !hasDoubleJumped && !recentDamage) {
 				//handels double jumping
 				Debug.Log("jump2");
 				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, jumpForce);
@@ -175,9 +178,9 @@ public class PlayerMovment : MonoBehaviour {
 				alowAirAcelerationWhenDamage = false;
 				animate.SetBool("Ground", false);
 				//animate.SetBool("Damage", true);
-				m_Rigidbody2D.velocity = new Vector2(((move*maxSpeed) / -1f), jumpForce);
+				m_Rigidbody2D.velocity = new Vector2(((move*maxSpeed) / -1f), jumpForce/1.25f);
 				deAceleration = deAcelerationDamage;
-				Invoke("ClearDamage", 0.5f);
+				Invoke("ClearDamage", 0.25f);
 			}
 		}
 	}
