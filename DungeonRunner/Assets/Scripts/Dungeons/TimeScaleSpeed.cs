@@ -3,15 +3,26 @@ using System.Collections;
 
 public class TimeScaleSpeed : MonoBehaviour {
 
-	public float baseTimeScale = 1.0f;
+	public float baseTimeScale = 1.0f; //the base time scale
+	private float currentTimeScale; //the time scale while running through the dungeons
 	
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = baseTimeScale + DataContainer.timeScaleMod;
+		currentTimeScale = Time.timeScale;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	/// Pauses/unpauses the game.
+	public void PauseGame(){
+		//If not paused, pauses
+		if (!GameState.Paused) {
+			Time.timeScale = 0;
+			GameState.Paused = true;
+		} else if (GameState.Paused) { //if paused, unpauses
+			Time.timeScale = currentTimeScale;
+			GameState.Paused = false;
+		}
 	}
+
+
 }

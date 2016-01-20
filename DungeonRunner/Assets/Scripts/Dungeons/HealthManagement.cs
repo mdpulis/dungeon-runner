@@ -10,12 +10,12 @@ public class HealthManagement : MonoBehaviour {
 	
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
-		hpText.text = "HP: " + player.GetComponent<PlayerParameters> ().playerHealth;
+		hpText.text = "HP: " + player.GetComponent<PlayerParameters> ().PlayerHealth;
 	}
 
 	public void UpdateHealthVisible(){
-		hpText.text = "HP: " + player.GetComponent<PlayerParameters> ().playerHealth;
-		hpBar.fillAmount = (float)player.GetComponent<PlayerParameters> ().playerHealth / DataContainer.maxPlayerHealth;
+		hpText.text = "HP: " + player.GetComponent<PlayerParameters> ().PlayerHealth;
+		hpBar.fillAmount = (float)player.GetComponent<PlayerParameters> ().PlayerHealth / DataContainer.maxPlayerHealth;
 	}
 
 	public void DisplayDeath(){

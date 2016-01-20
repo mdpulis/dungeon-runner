@@ -15,9 +15,9 @@ public class Scoring : MonoBehaviour {
 	
 	// Fixed update only updates on fixed frames
 	void FixedUpdate () {
-		//sets the score to that of the players X cordinate.
-		//if player is moving, score incriments up
-		//if player is not moving, score incriments down
+		//sets the score to that of the player's X coordinate.
+		//if player is moving, score increments up
+		//if player is not moving, score increments down
 		if (player.transform.localPosition.x >= (lastPosition + 0.1)) {
 			//Debug.Log (lastPosition + " - " + player.transform.localPosition.x);
 			countForward += 1;
@@ -39,7 +39,7 @@ public class Scoring : MonoBehaviour {
 				countForward = 0;
 			}
 		} else {
-			Debug.Log("Player moved backwards");
+			//Debug.Log("Player moved backwards");
 			//score -= 1000;
 		}
 		if (score < 0) {
@@ -47,7 +47,7 @@ public class Scoring : MonoBehaviour {
 		}
 		//records curent position for checking on next call.
 		lastPosition = player.transform.localPosition.x;
-		//prints score to visable text feild.
-		scoreText.text = "" + score;
+		//prints score to visable text field.
+		scoreText.text = String.Format("{0:000000000000}", score);
 	}
 }

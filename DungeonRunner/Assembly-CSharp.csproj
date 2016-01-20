@@ -38,10 +38,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>D:/Games/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>D:/Games/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -99,30 +99,38 @@
      <Compile Include="Assets\Scripts\Dungeons\DamagePlayer.cs" />
      <Compile Include="Assets\Scripts\Dungeons\DestroyerScript.cs" />
      <Compile Include="Assets\Scripts\Dungeons\DisplayFrameRate.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\DungeonCanvasRefs.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\DungeonEventManager.cs" />
      <Compile Include="Assets\Scripts\Dungeons\HealthManagement.cs" />
-     <Compile Include="Assets\Scripts\Dungeons\PlayerMovment.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\Item.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Dungeons\PlayerParameters.cs" />
      <Compile Include="Assets\Scripts\Dungeons\RandomSpawnGround.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Scoring.cs" />
      <Compile Include="Assets\Scripts\Dungeons\SpawnScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\StatusEffect\StatusEffect.cs" />
      <Compile Include="Assets\Scripts\Dungeons\TimeScaleSpeed.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Timing.cs" />
+     <Compile Include="Assets\Scripts\General\ConstantData.cs" />
      <Compile Include="Assets\Scripts\General\DataContainer.cs" />
+     <Compile Include="Assets\Scripts\General\GameSettings.cs" />
+     <Compile Include="Assets\Scripts\General\GameState.cs" />
      <Compile Include="Assets\Scripts\Namespaces\ColorControls.cs" />
      <Compile Include="Assets\Scripts\Namespaces\TimeSpanUtil.cs" />
      <Compile Include="Assets\Scripts\Platformer2DUserControl.cs" />
      <Compile Include="Assets\Scripts\PlatformerCharacter2D.cs" />
      <Compile Include="Assets\Scripts\Town\TownAreaLoader.cs" />
+     <Compile Include="Assets\Scripts\UI Prefab Objects\ItemObject.cs" />
      <None Include="Assets\Puppet2D\Shaders\BlackAndWhite.shader" />
      <None Include="Assets\Puppet2D\Shaders\VertColor.shader" />
      <None Include="Assets\Puppet2D\Shaders\unlitTransparentDouble.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/Games/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
- <HintPath>D:/Games/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
