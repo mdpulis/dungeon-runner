@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour {
 	const 		float 		FORWARD_RADIUS = .2f;	// Radius of the overlap circle to determine if coliding with anythign in front
 	#endregion Constants
 
-	public 		bool 		AllowMove = true;		// tracks X movment permissions
+	//public 		bool 		AllowMove = true;		// tracks X movment permissions
 	public		bool		AllowAirAceleration = true;	// permits the player to acelerate on asecnt of jumps
 	public 		bool 		HasDoubleJumped = false;// tracks if player has double jumped
 	public 		bool 		JumpBuffer = false;		// tracks jump comands, useed for buffering when jumped
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour {
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
 	}
 	
-	///Handles ground checks on update
+	///Handles colission checks on update
 	private void FixedUpdate() {
 		//bool crouch = Input.GetKey(KeyCode.LeftControl);
 		
@@ -82,7 +82,6 @@ public class PlayerMovement : MonoBehaviour {
 			if (collidersForward[i].gameObject != gameObject) {
 				Debug.Log("we collided!");
 				NotMoving();
-				//grounded = true;
 				//if (!recentDamage) {alowAirAcelerationWhenDamage = true;}
 			}
 		}
@@ -99,16 +98,16 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 	
+	//handels damage comands
 	public void Damage(float force) {
 		//force is how hard far the player jumps back
-		//stopPlayer = true;
 		Debug.Log("Damage feedback triggered for force of: " + force);
 		Move (force, false, false, false, true);
 	}
 	
+	//handels setting the none moving state
 	public void NotMoving() {
 		DecelerationStopped = 10f;
-		//animate.SetFloat("Speed", Mathf.Abs(0f));
 	}
 	
 	public void Move(float move, bool crouch, bool jump, bool sprint, bool damage) {
@@ -132,12 +131,12 @@ public class PlayerMovement : MonoBehaviour {
 					//Debug.Log("acelerating-"+deAceleration);
 				}
 				
-				// The Speed animator parameter is set to the absolute value of the horizontal input.
+				//The Speed animator parameter is set to the absolute value of the horizontal input.
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				//sets the forward velocity
 				m_Rigidbody2D.velocity = new Vector2(move*MaxSpeed/deceleration, m_Rigidbody2D.velocity.y);
 			} else if (AllowAirAccelerationWhenDamage && AllowAirAceleration) {
-				if (RecentDamage) {Debug.Log("!!! AIR");}
+				//if (RecentDamage) {Debug.Log("!!! AIR");}
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				
 				//only acelerates on the asent of the jump.
@@ -182,17 +181,19 @@ public class PlayerMovement : MonoBehaviour {
 			
 //----------------------------------------------------------------------------------------------------------------------
 			
-			//damage
+			//applies damage movment
 			if (damage) {
 				RecentDamage = true;
 				grounded = false;
 				AllowAirAccelerationWhenDamage = false;
 				animate.SetBool("Ground", false);
-				//animate.SetBool("Damage", true);
-				m_Rigidbody2D.velocity = new Vector2(((move*MaxSpeed) / -1f), JumpForce/1.25f);
+				//damage force is multiplied by the MaxSpeed and JumpForce for aplication
+				m_Rigidbody2D.velocity = new Vector2(((move*MaxSpeed) / -1f), move*JumpForce/1.25f);
 				deceleration = DecelerationDamage;
 				Invoke("ClearDamage", 0.25f);
 			}
+		} else {
+			m_Rigidbody2D.velocity = Vector2.zero;
 		}
 	}
 	
