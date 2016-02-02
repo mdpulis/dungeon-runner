@@ -44,9 +44,11 @@ public class SpawnScript : MonoBehaviour {
 			//if i == 0, first spawn object, so let's make an object with another spawner on it
 			if(i == 0){
 				randomSpawnGround = spawnableSpawnerGrounds[Random.Range (0, spawnableSpawnerGrounds.Count)];
-			}else{
-				//Otherwise, we will choose from our range of selectable ojbects according to our Unity dragged and dropped grounds
+			}
+			else{
+				//Otherwise, we will choose from our range of selectable objects according to our Unity dragged and dropped grounds
 				randomSpawnGround = spawnableGrounds[Random.Range(0, spawnableGrounds.Count)];
+				}
 			}
 
 			//use i * 10 since each object is 10 away from each other

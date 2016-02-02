@@ -103,6 +103,14 @@
      <Compile Include="Assets\Scripts\Dungeons\DungeonEventManager.cs" />
      <Compile Include="Assets\Scripts\Dungeons\HealthManagement.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Item.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundHoleCrate_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundHole_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundSpawner_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundWithCrateStack_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundWithDRBanner_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundWithMarioCrates_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\GroundWithSpike_Height.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\LevelPieces_Height\Ground_Height.cs" />
      <Compile Include="Assets\Scripts\Dungeons\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Dungeons\PlayerParameters.cs" />
      <Compile Include="Assets\Scripts\Dungeons\RandomSpawnGround.cs" />
