@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using SynodicArc.DungeonRunner.StatusEffects;
 
 namespace SynodicArc.DungeonRunner.Items{
 	/// Uses the references to the item button's prefab locations
@@ -12,7 +13,7 @@ namespace SynodicArc.DungeonRunner.Items{
 		#region Constants
 		public const float METER_FILL_CAP = 0.75f; //the meter appears to be maxed out at 0.75f instead of 1.0f
 		public const string ALT = "alt"; //the alternate control scheme's string addition
-		public const float TIMER_INTERVAL = 5.0f; //How often the timer ticks (in ms)
+		public const float TIMER_INTERVAL = 50.0f; //How often the timer ticks (in ms)
 
 		//Animator
 		public const string FLASH = "Flash";
@@ -50,6 +51,14 @@ namespace SynodicArc.DungeonRunner.Items{
 		private Timer cooldownTimer; //timer with Countdown() event that handles stuff
 		private bool timerOn; //is the timer currently on? Need to know in case we pause
 
+//		//Status Effect Parameters (Green bar and such)
+//		private Item.UseCooldownType statusEffectUseType; //the use type of the item
+//		private float statusEffectItemCooldown; //the status effect cooldown that the item has every time
+//		private float statusEffectCurrentCooldown; //the cooldown that the timer is currently dealing with
+//		private float statusEffectCurrentCooldownElapsed; //the time that has currently elapsed in this cooldown
+//		private Timer statusEffectCooldownTimer; //timer with StatusEffectCountdown() event that handles stuff
+//		private bool statusEffectTimerOn; //is the status effect timer currently on?
+
 		#region SetUp
 		/// Sets up the item object, assigning the user of the item and taking the item itself.
 		/// We also retrieve the number of the item passed in; that is, is this the 3rd item we've gotten? The 1st? 4th? etc.
@@ -59,10 +68,20 @@ namespace SynodicArc.DungeonRunner.Items{
 			ThisItem = itm;
 			ItemUser = itmUsr;
 			ItemNumber = itmNum;
+
 			//Parameters assignment
 			itemCooldown = ThisItem.Cooldown * 1000.0f; //convert to ms
 			cooldownTimer = new Timer (TIMER_INTERVAL); //gets us a new timer 
 			cooldownTimer.Elapsed += this.Countdown;
+
+//			//Status Effect Parameters assignment -- we will only ever have active status effects for active items so we cast to ActiveStatusEffect
+//			ActiveStatusEffect activeStatusEffect = (ActiveStatusEffect) ThisItem.PrimaryItemStatusEffect;
+//			statusEffectUseType = ThisItem.UseCooldown; //gets what type of cooldown we have
+//			if (statusEffectUseType != Item.UseCooldownType.None) { //As long as we DO have a UseType, we can set up the timer
+//				statusEffectItemCooldown = activeStatusEffect.Duration * 1000.0f;
+//				statusEffectCooldownTimer = new Timer (TIMER_INTERVAL); //gets us a new timer
+//				statusEffectCooldownTimer.Elapsed += this.StatusEffectCountdown;
+//			}
 
 			//Visualization
 			if (ThisItem.ItemSprite != null)
@@ -90,6 +109,9 @@ namespace SynodicArc.DungeonRunner.Items{
 		}
 
 
+		void OnDisable(){
+			cooldownTimer.Dispose ();
+		}
 		#endregion SetUp
 
 
@@ -120,7 +142,7 @@ namespace SynodicArc.DungeonRunner.Items{
 			}
 			#endregion Controller/Keyboard Handling
 
-			#region Timer On/Fill Amounts/Etc.
+			#region Timer On and Fill Amounts
 			//Can't put a lot of this on the timer since it's not on the main thread, so we do it in Update
 			if (timerOn){
 				if(currentCooldown < 0){
@@ -144,8 +166,35 @@ namespace SynodicArc.DungeonRunner.Items{
 
 				}
 			}
-			#endregion Timer On/Fill Amounts/Etc.
+			#endregion Timer On and Fill Amounts
 
+//			#region Status Effects and Fill Amounts
+//			if (statusEffectTimerOn){
+//				switch(statusEffectUseType){
+//				case(Item.UseCooldownType.Timed):
+//					if(statusEffectCurrentCooldown < 0){
+//						statusEffectCooldownTimer.Stop ();
+//						Debug.Log ("<color=cyan>Done!</color>");
+//						ItemMeterFill.fillAmount = 0.0f;
+//						statusEffectTimerOn = false; //the timer is now off! We don't need to keep checking this
+//					} else {
+//						ItemMeterFill.fillAmount = (statusEffectCurrentCooldown / METER_FILL_CAP); //the meter gets smaller as the timer continues
+//					}
+//					break;
+//				case(Item.UseCooldownType.UseCount):
+//					//
+//					break;
+//				case(Item.UseCooldownType.None):
+//					Debug.Log("<color=red><b>Status Effect Timer turned on for 'None' type. Turning off.</b></color>");
+//					statusEffectTimerOn = false;
+//					break;
+//				default:
+//					UnityEngine.Debug.Log("<color=red><b>No StatusEffectuseType found. Turning off.</b></color>");
+//					statusEffectTimerOn = false;
+//					break;
+//				}
+//			}
+//			#endregion Status Effects and Fill Amounts
 		}
 		#endregion Update
 
@@ -169,6 +218,26 @@ namespace SynodicArc.DungeonRunner.Items{
 
 		#endregion Countdown
 
+//		#region Status Effect Countdown
+//		/// Sets up all necessary parameters before starting Countdown()
+//		public void StatusEffectCountdownSetUp(){
+//			if (statusEffectUseType == Item.UseCooldownType.Timed) {
+//				statusEffectCurrentCooldown = statusEffectItemCooldown; //Set current cooldown to the original cooldown duration (in ms value)
+//				statusEffectCurrentCooldownElapsed = 0.0f; //Reset elapsed timer back to 0 as well
+//				statusEffectCooldownTimer.Start (); //Start our timer, going through Countdown() every interval
+//				statusEffectTimerOn = true; //The timer is now on!
+//				Debug.Log ("<color=cyan>Starting new statusEffectCooldownTimer!</color>");
+//			}
+//		}
+//
+//		/// The countdown that occurs after using an item 
+//		public void StatusEffectCountdown(object source, ElapsedEventArgs e){
+//			statusEffectCurrentCooldown -= TIMER_INTERVAL; //Reduce the cooldown by the timer's interval value
+//			statusEffectCurrentCooldownElapsed += TIMER_INTERVAL; //Add to the elapsed timer by the timer's interval value
+//			//The end of Countdown occurs in Update() due to certain things needing to be accessed on the main thread
+//		}
+//		#endregion Status Effect Countdown
+
 
 		#region General Functions
 		/// Uses the item assigned to this button.
@@ -180,7 +249,6 @@ namespace SynodicArc.DungeonRunner.Items{
 				ThisItem.UseItem (ItemUser); //Use this item, passing the user of the item
 			}
 		}
-
 		#endregion General Functions
 
 

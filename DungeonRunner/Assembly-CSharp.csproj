@@ -116,9 +116,14 @@
      <Compile Include="Assets\Scripts\Dungeons\RandomSpawnGround.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Scoring.cs" />
      <Compile Include="Assets\Scripts\Dungeons\SpawnScript.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\StatusEffect\ActiveStatusEffect.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\StatusEffect\SlowDown.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\StatusEffect\SpeedUp.cs" />
      <Compile Include="Assets\Scripts\Dungeons\StatusEffect\StatusEffect.cs" />
+     <Compile Include="Assets\Scripts\Dungeons\StatusEffect\TimeScaleChange.cs" />
      <Compile Include="Assets\Scripts\Dungeons\TimeScaleSpeed.cs" />
      <Compile Include="Assets\Scripts\Dungeons\Timing.cs" />
+     <Compile Include="Assets\Scripts\Enums\StatusEffectNames.cs" />
      <Compile Include="Assets\Scripts\General\ConstantData.cs" />
      <Compile Include="Assets\Scripts\General\DataContainer.cs" />
      <Compile Include="Assets\Scripts\General\GameSettings.cs" />

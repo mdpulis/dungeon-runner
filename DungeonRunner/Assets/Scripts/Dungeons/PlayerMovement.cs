@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using SynodicArc.DungeonRunner.Items;
 using SynodicArc.DungeonRunner.StatusEffects;
 
@@ -12,6 +14,7 @@ public class PlayerMovement : MonoBehaviour {
 	#region Constants
 	const 		float 		GROUNDED_RADIUS = .2f;	// Radius of the overlap circle to determine if grounded
 	const 		float 		FORWARD_RADIUS = .2f;	// Radius of the overlap circle to determine if coliding with anythign in front
+	const		float		ONE_SECOND = 1000f; 	// 1000 milliseconds is one second
 	#endregion Constants
 
 	//public 		bool 		AllowMove = true;		// tracks X movment permissions
@@ -19,6 +22,7 @@ public class PlayerMovement : MonoBehaviour {
 	public 		bool 		HasDoubleJumped = false;// tracks if player has double jumped
 	public 		bool 		JumpBuffer = false;		// tracks jump comands, useed for buffering when jumped
 	public 		float 		MaxSpeed = 10f;			// max speed the player can travel
+	private		float		modMaxSpeed = 10f;		// max speed after mods
 	public 		float 		JumpForce = 200f;		// vertical force when jumping
 	public		bool		StopPlayer = false;		// prevents input but alows physics
 	public		bool		RecentDamage = false;	// tracks if the damage thigns been triggered
@@ -37,11 +41,12 @@ public class PlayerMovement : MonoBehaviour {
 	private 	bool 		grounded; 				// Whether or not the player is grounded.
 	private 	Animator 	animate;            	// Reference to the player's animator component.
 	private 	Rigidbody2D m_Rigidbody2D;			// references the player object
+	private		bool		alive = true;					// Is the player alive? Needs to be to perform actions.
 	
 	private bool m_Jump;
 
-	//public List<StatusEffect> StatusEffectModifiers; //the list of status effects that modify our player in various ways
-
+	//References to other parts of player
+	private PlayerParameters playerParameters;
 
 
 	private void Awake() {
@@ -51,44 +56,55 @@ public class PlayerMovement : MonoBehaviour {
 		forwardCheck = transform.Find("ForwardCheck");
 		animate = GetComponent<Animator>();
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
+		playerParameters = this.GetComponent<PlayerParameters> ();
+
+		//Setting up values
+		modMaxSpeed = MaxSpeed;
 	}
 	
-	///Handles colission checks on update
+	///Handles collision checks on update
 	private void FixedUpdate() {
-		//bool crouch = Input.GetKey(KeyCode.LeftControl);
+		//if not alive, can't do anything
+		if (alive) {
+			//bool crouch = Input.GetKey(KeyCode.LeftControl);
 		
-		grounded = false;
+			grounded = false;
 		
-		//check if the player is grounded using a circlecast to ground. if it hits, it sticks
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUNDED_RADIUS, whatIsGround);
-		for (int i = 0; i < colliders.Length; i++) {
-			if (colliders[i].gameObject != gameObject) {
-				grounded = true;
-				if (!RecentDamage) {AllowAirAccelerationWhenDamage = true;}
+			//check if the player is grounded using a circlecast to ground. if it hits, it sticks
+			Collider2D[] colliders = Physics2D.OverlapCircleAll (groundCheck.position, GROUNDED_RADIUS, whatIsGround);
+			for (int i = 0; i < colliders.Length; i++) {
+				if (colliders [i].gameObject != gameObject) {
+					grounded = true;
+					if (!RecentDamage) {
+						AllowAirAccelerationWhenDamage = true;
+					}
+				}
 			}
-		}
-		//check if the player is hitting the ceiling using a circlecast to ceiling.
-		Collider2D[] collidersCeiling = Physics2D.OverlapCircleAll(ceilingCheck.position, GROUNDED_RADIUS, whatIsGround);
-		for (int i = 0; i < collidersCeiling.Length; i++) {
-			if (collidersCeiling[i].gameObject != gameObject) {
-				Debug.Log("Hit the ceiling");
-				//grounded = true;
-				if (!RecentDamage) {AllowAirAccelerationWhenDamage = true;}
+			//check if the player is hitting the ceiling using a circlecast to ceiling.
+			Collider2D[] collidersCeiling = Physics2D.OverlapCircleAll (ceilingCheck.position, GROUNDED_RADIUS, whatIsGround);
+			for (int i = 0; i < collidersCeiling.Length; i++) {
+				if (collidersCeiling [i].gameObject != gameObject) {
+					Debug.Log ("Hit the ceiling");
+					//grounded = true;
+					if (!RecentDamage) {
+						AllowAirAccelerationWhenDamage = true;
+					}
+				}
 			}
-		}
-		//check if the player is hitting an obstical using a circlecast to obstacle.
-		Collider2D[] collidersForward = Physics2D.OverlapCircleAll(forwardCheck.position, FORWARD_RADIUS, whatIsObstacle);
-		for (int i = 0; i < collidersForward.Length; i++) {
-			if (collidersForward[i].gameObject != gameObject) {
-				Debug.Log("we collided!");
-				NotMoving();
-				//if (!recentDamage) {alowAirAcelerationWhenDamage = true;}
+			//check if the player is hitting an obstical using a circlecast to obstacle.
+			Collider2D[] collidersForward = Physics2D.OverlapCircleAll (forwardCheck.position, FORWARD_RADIUS, whatIsObstacle);
+			for (int i = 0; i < collidersForward.Length; i++) {
+				if (collidersForward [i].gameObject != gameObject) {
+					Debug.Log ("we collided!");
+					NotMoving ();
+					//if (!recentDamage) {alowAirAcelerationWhenDamage = true;}
+				}
 			}
-		}
 		
-		Move (1f, false, m_Jump, false, false);
-		animate.SetBool("Ground", grounded);
-		animate.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
+			Move (1f, false, m_Jump, false, false);
+			animate.SetBool ("Ground", grounded);
+			animate.SetFloat ("vSpeed", m_Rigidbody2D.velocity.y);
+		}
 	}
 	
 	private void Update() {
@@ -134,14 +150,14 @@ public class PlayerMovement : MonoBehaviour {
 				//The Speed animator parameter is set to the absolute value of the horizontal input.
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				//sets the forward velocity
-				m_Rigidbody2D.velocity = new Vector2(move*MaxSpeed/deceleration, m_Rigidbody2D.velocity.y);
+				m_Rigidbody2D.velocity = new Vector2(move*modMaxSpeed/deceleration, m_Rigidbody2D.velocity.y);
 			} else if (AllowAirAccelerationWhenDamage && AllowAirAceleration) {
 				//if (RecentDamage) {Debug.Log("!!! AIR");}
 				animate.SetFloat("Speed", Mathf.Abs(move));
 				
 				//only acelerates on the asent of the jump.
 				if (m_Rigidbody2D.velocity.y > 5) {
-					m_Rigidbody2D.velocity = new Vector2(move*MaxSpeed/deceleration, m_Rigidbody2D.velocity.y);
+					m_Rigidbody2D.velocity = new Vector2(move*modMaxSpeed/deceleration, m_Rigidbody2D.velocity.y);
 				}
 			}
 			
@@ -188,7 +204,7 @@ public class PlayerMovement : MonoBehaviour {
 				AllowAirAccelerationWhenDamage = false;
 				animate.SetBool("Ground", false);
 				//damage force is multiplied by the MaxSpeed and JumpForce for aplication
-				m_Rigidbody2D.velocity = new Vector2(((move*MaxSpeed) / -1f), move*JumpForce/1.25f);
+				m_Rigidbody2D.velocity = new Vector2(((move*modMaxSpeed) / -1f), move*JumpForce/1.25f);
 				deceleration = DecelerationDamage;
 				Invoke("ClearDamage", 0.25f);
 			}
@@ -207,4 +223,46 @@ public class PlayerMovement : MonoBehaviour {
 		RecentDamage = false;
 		Debug.Log("Damage jump cleared");
 	}
+
+
+	#region ActiveMovementModifiers
+	public void SpeedUp(float speedUpAmt, float duration){
+		Debug.Log ("Starting to speed up!");
+		modMaxSpeed += speedUpAmt;
+		StartCoroutine (EndSpeedUp (speedUpAmt, duration));
+//		Timer tmr = new Timer (duration * ONE_SECOND);
+//		tmr.Start ();
+//		Debug.Log ("Starting timer.");
+//		tmr.Elapsed += delegate {
+//			modMaxSpeed -= speedUpAmt;
+//			tmr.Stop();
+//			tmr.Close();
+//			Debug.Log ("Ending timer.");
+//		};
+	}
+
+	private IEnumerator EndSpeedUp(float speedUpAmt, float duration){
+		yield return new WaitForSeconds (duration);
+		modMaxSpeed -= speedUpAmt;
+	}
+
+	public void SlowDown(float slowDownAmt, float duration){
+		Debug.Log ("Starting to slow down.");
+		modMaxSpeed -= slowDownAmt;
+		StartCoroutine (EndSlowDown (slowDownAmt, duration));
+	}
+
+	private IEnumerator EndSlowDown(float slowDownAmt, float duration){
+		yield return new WaitForSeconds (duration);
+		modMaxSpeed += slowDownAmt;
+	}
+
+	#endregion ActiveMovementModifiers
+
+	#region Death
+	/// Kills the player and they can no longer move.
+	public void KillPlayer(){
+		alive = false;
+	}
+	#endregion Death
 }

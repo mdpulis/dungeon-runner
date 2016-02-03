@@ -25,4 +25,15 @@ public class TimeScaleSpeed : MonoBehaviour {
 	}
 
 
+	/// Changes the time scale.
+	public void ChangeTimeScale(float alteration){
+		currentTimeScale += alteration;
+		if (currentTimeScale <= 0.0f) {
+			currentTimeScale -= alteration;
+			Debug.Log ("Time scale going too low.");
+		} else {
+			Time.timeScale = currentTimeScale;
+		}
+	}
+
 }
