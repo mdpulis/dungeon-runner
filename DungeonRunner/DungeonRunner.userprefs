@@ -1,19 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dungeons\TimeScaleSpeed.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dungeons\SpawnScript.cs">
     <Files>
       <File FileName="Assets\Scripts\Dungeons\PlayerMovement.cs" Line="45" Column="2" />
-      <File FileName="Assets\Scripts\Dungeons\PlayerParameters.cs" Line="179" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\PlayerParameters.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dungeons\DamagePlayer.cs" Line="28" Column="26" />
       <File FileName="Assets\Scripts\Dungeons\Item.cs" Line="62" Column="39" />
-      <File FileName="Assets\Scripts\UI Prefab Objects\ItemObject.cs" Line="32" Column="63" />
-      <File FileName="Assets\Scripts\Dungeons\StatusEffect\StatusEffect.cs" Line="28" Column="21" />
-      <File FileName="Assets\Scripts\Dungeons\StatusEffect\ActiveStatusEffect.cs" Line="6" Column="1" />
-      <File FileName="Assets\Scripts\Dungeons\StatusEffect\SpeedUp.cs" Line="15" Column="42" />
-      <File FileName="Assets\Scripts\Enums\StatusEffectNames.cs" Line="18" Column="16" />
-      <File FileName="Assets\Scripts\Dungeons\StatusEffect\SlowDown.cs" Line="15" Column="42" />
-      <File FileName="Assets\Scripts\Dungeons\StatusEffect\TimeScaleChange.cs" Line="9" Column="48" />
-      <File FileName="Assets\Scripts\Dungeons\TimeScaleSpeed.cs" Line="30" Column="21" />
+      <File FileName="Assets\Scripts\UI Prefab Objects\ItemObject.cs" Line="33" Column="67" />
+      <File FileName="Assets\Scripts\Dungeons\StatusEffect\StatusEffect.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\LevelPieces_Height\GroundPiece.cs" Line="4" Column="1" />
+      <File FileName="Assets\Scripts\Dungeons\SpawnScript.cs" Line="15" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
